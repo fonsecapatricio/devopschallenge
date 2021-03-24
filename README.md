@@ -24,7 +24,7 @@ With ansible:
 
 * Clone the repo
 
-* For terraform you have to edit /devopschallenge/provider.tf and provide your Access key ID, Secret Access Key, and AWS region
+* For terraform you have to edit /devopschallenge/provider.tf and provide your Access key ID, Secret Access Key and AWS region
 
 * For Ansible i used amazon.aws.aws_ec2 plugin for hosts dynamic inventory, you have to enable it in your ansible.cfg file at inventory section
 
@@ -43,8 +43,11 @@ inventory = ~/devopschallenge/ansible/inventory/aws_ec2.yaml
 * Edit file devopschallenge/ansible/deploy_app.yaml and provide the path to your .pem file to SSH EC2 Instances.
 ### Executing program
 
-* To generate infrastructure with terraform, run the following commands
+* To generate infrastructure with terraform, run the following commands in your working directory
 
+```
+terraform init
+```
 ```
 terraform plan
 ```
