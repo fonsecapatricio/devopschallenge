@@ -11,7 +11,7 @@ capacity = 2 EC2 instances.
 
 With ansible:
 
-* Deploy a Node.js chat application to EC2 previously created instances. 
+* Deploy a Node.js chat application (https://github.com/abkunal/Chat-App-using-Socket.io.git) to EC2 previously created instances. 
 
 ## Getting Started
 
