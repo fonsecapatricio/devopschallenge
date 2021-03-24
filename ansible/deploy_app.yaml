@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: true
+
+  vars:
+    - homeDir: /home/ubuntu
+    - appDir : app
+    - privateKey: 
+
+
+  tasks:
+  - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
+  - name: Install Packages
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - npm
+      - nodejs
+      - pm2
+      - git
+      - nginx
+      - curl
+
+  - name: Create APP Directory
+    file: path={{homeDir}}/{{appDir}} state=directory
+
+  - name: Copy Private Key
+    copy: src={{privateKey}} dest={{homeDir}} mode=0600
+
+  - name: Git Clone Repo
+    git: repo=git@github.com:abkunal/Chat-App-using-Socket.io.git dest={{homeDir}}/{{appDir}} update=yes force=yes accept_hostkey=yes key_file={{homeDir}}/id_rsa
+    register: git_finished
+
+  - name: Running NPM install
+    npm: path={{homeDir}}/{{appDir}}
+    register: npm_finished
+    when: git_finished.changed
+
+  - name: Stop APP
+    become_user: ubuntu
+    command: "pm2 stop app chdir={{homeDir}}/{{appDir}}/"
+    ignore_errors: yes
+
+  - name: Start APP
+    become_user: ubuntu
+    command: "pm2 start index.html --name app chdir={{homeDir}}/{{appDir}}/"
+    ignore_errors: yes
+    when: npm_finished.changed
